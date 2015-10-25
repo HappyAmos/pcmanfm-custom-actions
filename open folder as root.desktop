@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Action
+Tooltip=Open current folder as root
+Name=Open current folder as root
+Profiles=profile-zero;
+Icon=folder
+
+[X-Action-Profile profile-zero]
+Exec=/usr/bin/gksu /usr/bin/pcmanfm %o %d
+Name=Default profile

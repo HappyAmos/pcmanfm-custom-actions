@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=Action
+ToolbarLabel[en_US]=Set as wallpaper
+ToolbarLabel[en]=Set as wallpaper
+ToolbarLabel[C]=Set as wallpaper
+Name[en_US]=Set as wallpaper
+Name[en]=Set as wallpaper
+Name[C]=Set as wallpaper
+Profiles=profile-zero;
+Icon=gtk-orientation-landscape
+
+[X-Action-Profile profile-zero]
+MimeTypes=image/*;
+Exec=pcmanfm -w %f
+Name[en_US]=Default profile
+Name[en]=Default profile
+Name[C]=Default profile
+SelectionCount==1
