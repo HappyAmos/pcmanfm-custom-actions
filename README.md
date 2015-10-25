@@ -1,0 +1,1 @@
+# pcmanfm-custom-actions
