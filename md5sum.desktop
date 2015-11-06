@@ -7,7 +7,7 @@ Name[en_US]=Generate md5sum
 Name[en]=Generate md5sum
 Name[C]=Generate md5sum
 Profiles=profile-zero;
-Icon=gtk-orientation-landscape
+Icon=accessories-calculator-symbolic
 
 [X-Action-Profile profile-zero]
 MimeTypes=*;

@@ -8,66 +8,52 @@ __version__		=  "1.0"
 __email__			= "adiamond1978 at gmail dot com"
 
 from configobj import ConfigObj
-import sys, getopt
+import sys, os, os.path
+import getopt
+import argparse
+import shutil
 
 def modifyConfigFile(configFile, section, key, value):
-    config = ConfigObj(configFile)
-    #config.filename = configFile
-    config.write_empty_values = True
-
-    #config[section] = {}
-    config[section][key] = value
-
-    config.write()
+	try:
+		config = ConfigObj(configFile)
+		config.write_empty_values = True
+		config[section][key] = value
+		config.write()
+	except Exception, msg:
+		print('Failed to modify %s -- %s' % (configFile, msg))
+		sys.exit(1)
 
 def main(argv):
-    reqArgs = {"i" : False, "s" : False, "k" : False, "v" : False}
-    helpText = """
-Usage: modifyConfigFile.py -i <inputfile> -s <section> -k <key> -v <value>
 
-    --help, -h
-        print usage summary
-    --ifile, -i
-        input file, name of config file to modify
-    --section, -s
-        name of section enclosed in [] to search for key
-    --key, -k
-        name of the key to change value for
-    --value, -v
-        replacement value for this key
-
-"""
-
-    if (len(sys.argv) < 8):
-        print(helpText)
-        sys.exit(2)
+	parser = argparse.ArgumentParser(description='Modify an INI format configuration file')
+	parser.add_argument('-i', '--input', help = 'name of config file to modify', required = True)
+	parser.add_argument('-s', '--section', help = 'name of section enclosed in [] to search for key', required = True)
+	parser.add_argument('-k', '--key', help = 'name of the key to modify', required = True)
+	parser.add_argument('-v', '--value', help = 'new value', required = True)
+	args = parser.parse_args()
         
-    try:
-        opts, args = getopt.getopt(argv, "hi:s:k:v:", ["ifile=", "section=", "key=", "value="])
-    except getopt.GetoptError:
-        print(helpText)
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt in ('-h', "--help"):
-            print(helpText)
-            sys.exit()
-        elif opt in ("-i", "--ifile"):
-            inputFile = arg
-            reqArgs["i"] = True
-        elif opt in ("-s", "--section"):
-            section = arg
-            reqArgs["s"] = True
-        elif opt in ("-k", "--key"):
-            key = arg
-            reqArgs["k"] = True
-        elif opt in ("-v", "--value"):
-            value = arg
-            reqArgs["v"] = True
-    if (reqArgs["i"] == True and reqArgs["s"] == True and reqArgs["k"] == True and reqArgs["v"] == True):    
-        modifyConfigFile(inputFile, section, key, value)
-    else:
-        print(helpText)
-        sys.exit(2)
+	# Check if file exists, is readable, and writeable.
+	# Exit if not.
+	if not os.path.isfile(args.input):
+		print("Not a file, or file doesn't exist")
+        	sys.exit(1)
+    	if not os.access(args.input, os.R_OK):
+        	print("Cannot read from %s" % args.input)
+        	sys.exit(1)
+    	if not os.access(args.input, os.W_OK):
+        	print("Cannot write %s" % args.input)
+        	sys.exit(1)	
+
+	# See if a backup of the original file exists, and create one if it doesn't.
+	if not os.path.isfile(args.input + ".bak"):
+		try:	
+			shutil.copy(args.input, args.input + ".bak")
+			print("Created backup file %s" % args.input + ".bak")
+		except Exception, msg:
+			print("Failed to create backup file %s  -- %s" % (args.input + ".bak", msg))
+			sys.exit(1)
+
+        modifyConfigFile(args.input, args.section, args.key, args.value)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
