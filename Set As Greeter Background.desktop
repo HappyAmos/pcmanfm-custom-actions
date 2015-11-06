@@ -7,7 +7,7 @@ Icon=gtk-orientation-landscape
 
 [X-Action-Profile profile-zero]
 MimeTypes=image/*;
-Exec=sh -c 'gksudo "python $HOME/.local/share/file-manager/actions/modifyConfigFile/modifyConfigFile.py -i /etc/lightdm/lightdm-gtk-greeter.conf -s greeter -k background -v '%f' "'
+Exec=sh -c 'gksu "python $HOME/.local/share/file-manager/actions/modifyConfigFile/modifyConfigFile.py -i /etc/lightdm/lightdm-gtk-greeter.conf -s greeter -k background -v %f"'
 Name=Default profile
 Name[en]=Default profile
 SelectionCount==1
